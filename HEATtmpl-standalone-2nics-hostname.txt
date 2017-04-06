@@ -1,0 +1,129 @@
+heat_template_version: 2014-10-16
+description: An Infoblox Grid Member
+parameters:
+  mgmt_network:
+    type: string
+    description: the management network
+    default: mgmt-net
+  lan1_network:
+    type: string
+    description: the Infoblox LAN1 Interface network (must have a /24 network for auto addressing to work)
+    default: protocol-net
+  #not required when getting userdata from  Infoblox::Grid::Member
+  lan1_netmask:
+    type: string
+    description: LAN1 Interface netmask
+    default: 255.255.255.0
+  nameserver_group:
+    type: string
+    description: the pre-existing Grid Name Server Group the member will belong to
+    default: default    
+  #temp_licenses:
+  #  default: ["vnios", "dns", "enterprise"]
+    temp_license:
+    type: string
+    description: comma separated list of licenses to enable
+    default: vnios,dns,enterprise
+  security_group:
+    type: string
+    description: the security group to use
+    default: Infoblox
+  external_network:
+    type: string
+    description: the external network for floating IP allocations
+    default: public-138-net
+  model:
+    type: string
+    description: vNIOS Model
+    default: IB-VM-1420
+  flavor:
+    type: string
+    description: vNIOS Flavor
+    default: vnios-810.55
+  image:
+    type: string
+    description: vNIOS Flavor
+    default: nios-7.3.0-314102-55G-810
+  wapi_url:
+    type: string
+    description: the URL to access the GM WAPI from the Heat engine
+  wapi_username:
+    type: string
+    description: the username for the WAPI access
+  wapi_password:
+    type: string
+    description: the username for the WAPI access
+  wapi_sslverify:
+    type: string
+    description: the value for SSL Verify (true/false/certificate path)
+    default: false
+  gm_vip:
+    type: string
+    description: the VIP of the GM, to be used by members for joining the grid
+  gm_cert:
+    type: string
+    description: the GM certificate contents
+  host_fqdname:
+    type: string
+    description: the grid member hostname FQDN
+    
+resources:     
+# We pre-allocate the port for LAN1, so that we have the IP address already for
+# injection via user_data
+  lan1_port:
+    type: OS::Neutron::Port
+    properties:
+      network: {get_param: lan1_network}
+      security_groups: [{get_param: security_group}]
+
+# For MGMT, we do not configure via injection, but we do configure via WAPI
+# at the time of member creation, so we want to pre-allocate that port too
+  mgmt_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_param: mgmt_network }
+      security_groups: [{get_param: security_group}]
+
+
+# Each member needs a floating IP so Ceilometer can poll the member for QPS.
+#  AC: NO FLOATING IP ON VZW TENANTS
+  floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: { get_param: external_network }
+      port_id: { get_resource: lan1_port }
+
+  server:
+    type: OS::Nova::Server
+    properties:
+      name: { get_param: host_fqdname }
+      flavor: { get_param: flavor }
+      image: { get_param: image }
+#      networks: [{network: mgmt-net }, {port: { get_resource: lan1_port}} ]
+#      networks: [{network: {get_param: mgmt_network}}, {port: {get_resource: lan1_port}}]     
+      networks: [{port: {get_resource: mgmt_port}}, {port: {get_resource: lan1_port}}]     
+#      metadata: { nios: true }
+#      config_drive: true
+#      user_data_format: RAW
+#      user_data:
+#        str_replace:
+#          template: |
+#            #infoblox-config
+            
+#            temp_license: $temp_license
+#            remote_console_enabled: true
+#            default_admin_password: infoblox
+#            lan1:
+#              v4_addr: $v4_addr
+#              v4_netmask: $v4_netmask
+#              v4_gw: $v4_gw
+#          params:
+#            $temp_license: { get_param: temp_license }
+#            $v4_addr: { get_attr: [lan1_port, fixed_ips, 0, ip_address] }
+#            $v4_netmask: { get_param: lan1_netmask }
+#            $v4_gw: { get_attr: [lan1_port, subnets, 0, gateway_ip] }
+      
+outputs:
+  member_service_address:
+    value: { get_attr: [lan1_port, fixed_ips] }
+

@@ -1,88 +1,32 @@
 # files
+NFVO registration
+{
+  "sOrchType": "HP",
+  "sPassword": "Welcome@1234",
+  "sTargetURL": "http://10.75.14.83:8080",
+  "sUsername": "vdsi_onb_vnf_mgr@vdsi"
+}
 
-Fetch Jenkins API
-==================
-curl --user admin:f78598af09db161f9c5eea94774f2553 http://jenkins-orch.vici.verizon.com:8080/crumbIssuer/api/xml?xpath=concat\(//crumbRequestField,%22:%22,//crumb\)
-•	Use the response as a header type in the subsequent request.
+response
+{
+  "nfvoId": "d64bc8b4-077d-3d34-98e5-d7afd45c7650"
+}
 
-Trigger Job-API:
-==============
-curl -X POST -H "Jenkins-Crumb:b27fadd2c583cdfd57526babeaa7ec0f" --user admin:f78598af09db161f9c5eea94774f2553  --header 'content-type: application/x-www-form-urlencoded' --data-urlencode json='{"parameter": [{"name":"id", "value":"123"}, {"name":"verbosity", "value":"high"}]}' http://jenkins-orch.vici.verizon.com:8080/job/VNF-Onboarding/job/VNF-Onboard.Download.VNF.Packages1/build
+Register OSS
+{
+  "appName": "MyOSS",
+  "domainId": "6ea7a82f-1f7c-42d7-abe4-2c6d92d94d30",
+  "modeInstanceId": "45698bbf-0419-4be4-acfe-4427c00054f7",
+  "modeInstanceUndeployId": "7c10bed4-6aa0-47f2-a54c-00515a410b54",
+  "nfvoId": "d64bc8b4-077d-3d34-98e5-d7afd45c7650",
+  "orchType": "HP",
+  "orgId": "b877eb45-c18d-46eb-8a79-d20c3204d23d",
+  "resourceArtifactId": "c4ad5969-f921-3552-8c66-7828a6b5d306",
+  "tenantId": "f8ff51d0-3bac-4dbb-998d-d7a155aaf384",
+  "vnfGroupId": "43b5dfee-ec46-4101-aaa2-ca412f7ba056"
+}
 
-
-
-I have updated the Jenkins job with remote build “token” xyz.
-
-[root@BBTPNJ33P0K ~]# curl  --user ranjasu:Verizon1 http://jenkins-orch.vici.verizon.com:8080/crumbIssuer/api/xml?xpath=concat\(//crumbRequestField,%22:%22,//crumb\)
-Jenkins-Crumb:8ed7365145722c7edc1bc3fb6cf06457[root@BBTPNJ33P0K ~]#
-[root@BBTPNJ33P0K ~]#
- [root@BBTPNJ33P0K ~]#
-[root@BBTPNJ33P0K ~]#
-[root@BBTPNJ33P0K ~]# curl -X POST -H "Jenkins-Crumb:8ed7365145722c7edc1bc3fb6cf06457" --user ranjasu:Verizon1 http://jenkins-orch.vici.verizon.com:8080/job/VNF_Onboarding_CICD_Pipeline/job/VNF_Package_Upload/build?token=xyz
-
-
-
-try {
-			String line;
-			Scanner scan = new Scanner(System.in);
-
-//			Process process = Runtime.getRuntime().exec(new String[] {"/bin/sh","-c", "sshpass -p 'sdnnfv@123' scp /home/sdnuser/ys.json invlab09@10.76.110.110:/tmp/"});
-			
-//			Process process = Runtime.getRuntime().exec(new String[] {"/bin/sh","-c", "ifconfig"});
-			
-//			ProcessBuilder builder = new ProcessBuilder("/bin/sh","-c", "ifconfig111");
-			ProcessBuilder builder = new ProcessBuilder("/bin/sh","-c", "ifconfig");
-			builder.redirectErrorStream(true);
-			Process process = builder.start();
-			
-			process.waitFor();
-			Integer result = process.exitValue();
-			System.out.println(result);
-			OutputStream stdin = process.getOutputStream ();
-			InputStream stderr = process.getErrorStream ();
-			InputStream stdout = process.getInputStream ();
-
-			BufferedReader reader = new BufferedReader (new InputStreamReader(stdout));
-			BufferedReader errorReader = new BufferedReader (new InputStreamReader(stderr));
-
-			while ((line = reader.readLine ()) != null) {
-			    System.out.println ("Stdout: " + line);
-			}
-			while ((line = errorReader.readLine ()) != null) {
-			    System.out.println ("Stderr: " + line);
-			}
-			
-			
-			
-			/*final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(stdin));
-			Thread T=new Thread(new Runnable() {
-			    @Override
-			    public void run() {
-			        while(true)
-			        {
-			            String input = scan.nextLine();
-			            input += "\n";
-			            try {
-			                writer.write(input);
-			                writer.flush();
-			            } catch (IOException e) {
-			                // TODO Auto-generated catch block
-			                e.printStackTrace();
-			            }
-
-			        }
-
-			    }
-			} );
-			T.start();
-			while ((line = reader.readLine ()) != null) {
-			    System.out.println ("Stdout: " + line);
-			}*/
-			
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}  
+Response
+{
+  "ossRegistrationId": "b91b63ac-d9eb-30b8-91e7-c64b2e85870d"
+}

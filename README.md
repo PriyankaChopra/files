@@ -1,5 +1,11 @@
-# files
-NFVO registration
+swagger-ui
+http://10.75.14.133:8090/swagger-ui.html#/
+
+rest url
+http://10.75.14.133:8090/settings/nfvo
+
+
+request data for NFVO registration
 {
   "sOrchType": "HP",
   "sPassword": "Welcome@1234",
@@ -12,7 +18,12 @@ response
   "nfvoId": "d64bc8b4-077d-3d34-98e5-d7afd45c7650"
 }
 
-Register OSS
+rest url
+http://10.75.14.133:8090/settings/applications
+
+
+request data for Register OSS
+
 {
   "appName": "MyOSS",
   "domainId": "6ea7a82f-1f7c-42d7-abe4-2c6d92d94d30",
@@ -30,3 +41,4 @@ Response
 {
   "ossRegistrationId": "b91b63ac-d9eb-30b8-91e7-c64b2e85870d"
 }
+

@@ -1,4 +1,4 @@
-package com.verizon.vnf.util;
+//package com.verizon.vnf.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,7 +14,7 @@ public class TestJenkins {
                         Process process1 = Runtime.getRuntime().exec(new String[] {"/bin/sh", "-c", "curl --user ranjasu:Verizon1 http://jenkins-orch.vici.verizon.com:8080/crumbIssuer/api/xml?xpath=concat\\(//crumbRequestField,%22:%22,//crumb\\)"});
                         process1.waitFor();
                         Integer result = process1.exitValue();
-                        System.out.println(result);
+                        System.out.println("Exit_status : "+ result);
                         InputStream stderr = process1.getErrorStream ();
                         InputStream stdout = process1.getInputStream ();
 
@@ -22,20 +22,26 @@ public class TestJenkins {
                         BufferedReader errorReader = new BufferedReader (new InputStreamReader(stderr));
                         crumbVal = reader.readLine();
                         System.out.println("CrumbValue: "+crumbVal);
+                        /*
                         while ((line = reader.readLine ()) != null) {
                                 System.out.println ("Stdout: " + line);
                         }
                         while ((line = errorReader.readLine ()) != null) {
                                 System.out.println ("Stderr: " + line);
                         }
+                        */
 
-                        Process process2 = Runtime.getRuntime().exec(new String[] {"/bin/sh", "-c", "curl X POST -H \""+crumbVal+"\""+" --user ranjasu:Verizon1 http://jenkins-orch.vici.verizon.com:8080/job/VNF_Onboarding_CICD_Pipeline/job/VNF_Package_Upload/build?token=xyz"});
+                        String cmd2 =  "curl -X POST -H \""+crumbVal+"\""+" --user ranjasu:Verizon1 http://jenkins-orch.vici.verizon.com:8080/job/VNF_Onboarding_CICD_Pipeline/job/VNF_Package_Upload/buildWithParameters?token=xyz --data 'VNF_ID=78f9297a-c747-43a4-8cc0-aeab3a429a7a'";
+                        System.out.println("CMD2: "+ cmd2);
+                        //Process process2 = Runtime.getRuntime().exec(new String[] {"/bin/sh", "-c", "curl -X POST -H \""+crumbVal+"\""+" --user ranjasu:Verizon1 http://jenkins-orch.vici.verizon.com:8080/job/VNF_Onboarding_CICD_Pipeline/job/VNF_Package_Upload/build?token=xyz"});
+
+                        Process process2 = Runtime.getRuntime().exec(new String[] {"/bin/sh", "-c", cmd2});
                         process2.waitFor();
                         Integer result2 = process2.exitValue();
-                        System.out.println(result2);
+                        System.out.println("ExitVale: "+ result2);
                         InputStream stderr2 = process2.getErrorStream ();
                         InputStream stdout2 = process2.getInputStream ();
-
+                        /*
                         BufferedReader reader2 = new BufferedReader (new InputStreamReader(stdout2));
                         BufferedReader errorReader2 = new BufferedReader (new InputStreamReader(stderr2));
                         crumbVal = reader2.readLine();
@@ -45,7 +51,8 @@ public class TestJenkins {
                         while ((line = errorReader2.readLine ()) != null) {
                                 System.out.println ("Stderr: " + line);
                         }
-			
+			*/
+                        
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

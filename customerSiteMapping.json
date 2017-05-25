@@ -1,0 +1,21 @@
+[
+  {
+    "customerName": "Enterprise A",
+    "cpeDetails": [
+      {
+        "openflow:1": "",
+        "openflow:2": ""
+      }
+    ],
+    "vCpeStatus": ""
+  },
+  {
+    "customerName": "Enterprise B",
+    "cpeDetails": [
+      {
+        "openflow:3": ""
+      }
+    ],
+    "vCpeStatus": ""
+  }
+]

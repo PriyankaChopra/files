@@ -1,0 +1,23 @@
+[
+      {
+        "policyName" : "policy1",
+        "srcIp" : "10.0.0.1",
+	"srcMask" : "8",
+	"srcSubnet" : "10.0.0.0",
+	"dstIp" : "10.0.0.2",
+	"dstMask" : "8",
+	"dstSubnet" : "10.0.0.0",
+	"protocol" : "icmp"
+
+      },
+      {
+        "policyName": "policy2",
+        "srcIp" : "20.0.0.1",
+	"srcMask" : "24",
+	"srcSubnet" : "20.0.0.0",
+	"dstIp" : "20.0.0.2",
+	"dstMask" : "24",
+	"dstSubnet" : "20.0.0.0",
+	"protocol" : "tcp"
+      }
+]

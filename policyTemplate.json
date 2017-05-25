@@ -1,23 +1,25 @@
-[
-      {
-        "policyName" : "policy1",
-        "srcIp" : "10.0.0.1",
-	"srcMask" : "8",
-	"srcSubnet" : "10.0.0.0",
-	"dstIp" : "10.0.0.2",
-	"dstMask" : "8",
-	"dstSubnet" : "10.0.0.0",
-	"protocol" : "icmp"
+http://192.168.56.102:8181/restconf/operations/policyNotifRpc:policyNotif
 
-      },
-      {
-        "policyName": "policy2",
-        "srcIp" : "20.0.0.1",
-	"srcMask" : "24",
-	"srcSubnet" : "20.0.0.0",
-	"dstIp" : "20.0.0.2",
-	"dstMask" : "24",
-	"dstSubnet" : "20.0.0.0",
-	"protocol" : "tcp"
-      }
-]
+{
+"input" : {
+"nodeId" : "openflow:1",
+"fwPolicies" : [ {  
+	"priority" : 20,
+	"firewall-policy" : {
+		"policy-name" : "test",
+		"l3-match" : {
+			"source-ip" : "10.0.0.1",
+			"source-subnet-mask" : "32",
+			"destination-ip" : "10.0.0.2",
+			"destination-subnet-mask" : "32",
+			"protocol-number" : 1
+		},
+		"l4-match" : {
+			"source-port" : 111,
+			"destination-port" : 222
+		},
+		"action" : "allow"
+	}
+	}]
+}
+}
